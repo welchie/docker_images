@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3"
 services:
   postgres:
     image: "postgres:${POSTGRES_VERSION}"
@@ -15,19 +15,24 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - mynet
   tomcat:
     build:
       tomcat
     image: "welchie99/tomcat:${TOMCAT_VERSION}"
     ports:
       - "8888:8080"
-    volumes:
-      - tomcat:/var/lib/tomcat/data
     healthcheck:
       test: netstat -lan | grep 8888 | wc -l
       interval: 1m30s
       timeout: 10s
       retries: 3
+    networks:
+      - mynet
+
+networks:
+  mynet:
+
 volumes:
   postgres:
-  tomcat:
